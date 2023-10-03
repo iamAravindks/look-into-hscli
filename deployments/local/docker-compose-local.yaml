@@ -1,0 +1,36 @@
+version: "3.6"
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27019:27017"
+    volumes:
+      - db_data:/data/db
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6371:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+  sqs-mock:
+    build:
+      context: $BASE_PATH/services/elastic-mq
+      dockerfile: $BASE_PATH/services/elastic-mq/Dockerfile
+    restart: always
+    ports:
+      - 9324:9324
+      - 9325:9325
+    volumes:
+      - sqs_mock:/data
+
+volumes:
+  db_data:
+  cache:
+  sqs_mock:
+  

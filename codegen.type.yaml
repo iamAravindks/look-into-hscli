@@ -1,0 +1,15 @@
+overwrite: true
+generates:
+  ./apps/soc-med-server/src/libs/types/generated/base-types.ts:
+    schema: ./apps/soc-med-server/src/modules/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      useIndexSignature: true
+      federation: true
+      wrapFieldDefinitions: true
+      contextType: ../index#SocMedServerContext
+      scalars:
+        DateTime: Date
+        EmailAddress: string
