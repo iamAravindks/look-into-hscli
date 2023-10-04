@@ -1,0 +1,68 @@
+type Post @key(fields: "_id") {
+  _id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  title: String
+  content: String
+  imageUrl: String
+  creator: ID
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+  imageUrl: String
+}
+
+input UpdatePostInput {
+  _id: ID!
+  title: String
+  content: String
+  imageUrl: String
+  creator: ID
+}
+
+extend type Query {
+  getPostById(_id: ID!): Post
+    @isMHAdmin
+    @cacheSet(type: "getPostById", identifier: "_id")
+  getAllPost(
+    search: String
+    filter: JSON
+    sort: JSON
+    limit: Int
+    offset: Int
+  ): [Post]! @isMHAdmin @cacheSet(type: "getAllPosts", identifier: "_id")
+  getOnePost(filter: JSON, sort: JSON): Post
+    @isMHAdmin
+    @cacheSet(type: "getPost", identifier: "_id")
+  getAllPostCount(search: String, filter: JSON): Int! @isMHAdmin
+}
+
+extend type Mutation {
+  createPost(data: CreatePostInput!): Post!
+    @isMHAdmin
+    @auth
+    @cachePurge(payloads: [{ types: ["getPost", "getAllPosts"] }])
+  updatePost(data: UpdatePostInput!): Post!
+    @isMHAdmin
+    @cachePurge(
+      payloads: [
+        { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }
+      ]
+    )
+  deletePost(_id: ID!): Post!
+    @isMHAdmin
+    @cachePurge(
+      payloads: [
+        { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }
+      ]
+    )
+  deleteManyPost(filter: JSON!): [Post!]!
+    @isMHAdmin
+    @cachePurge(
+      payloads: [
+        { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }
+      ]
+    )
+}

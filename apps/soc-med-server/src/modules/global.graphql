@@ -5,6 +5,7 @@ extend schema
   )
 
 directive @isMHAdmin on OBJECT | FIELD_DEFINITION | INTERFACE | UNION
+directive @auth on OBJECT | FIELD_DEFINITION | INTERFACE | UNION
 
 scalar JSON
 scalar DateTime

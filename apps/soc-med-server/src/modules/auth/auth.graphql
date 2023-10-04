@@ -1,0 +1,15 @@
+type AuthData{
+    token:String!
+    refreshToken:String
+    userId:String!
+}
+
+extend type Query{
+     login(email: String!, password: String!): AuthData!
+    @cacheSet(type: "getUserById", identifier: "_id")
+     forgotPassword(email:String!) : String!
+}
+
+extend type Mutation {
+  resetPassword(resetToken:String,password:String):User!
+}

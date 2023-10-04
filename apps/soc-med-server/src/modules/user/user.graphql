@@ -1,0 +1,72 @@
+type User @key(fields: "_id") {
+  _id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  name: String
+  password: String
+  bio: String
+  status: String
+  imageUrl: String
+  followers: [ID]
+  following: [ID]
+  passwordResetToken: String
+  passwordTokenExpires: DateTime
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+  bio: String
+  imageUrl: String
+}
+
+input UpdateUserInput {
+  _id: ID!
+  email: String
+  name: String
+  password: String
+  bio: String
+  status: String
+  imageUrl: String
+}
+
+extend type Query {
+  getUserById(_id: ID!): User
+    @isMHAdmin
+    @cacheSet(type: "getUserById", identifier: "_id")
+  getAllUser(
+    search: String
+    filter: JSON
+    sort: JSON
+    limit: Int
+    offset: Int
+  ): [User]! @isMHAdmin @cacheSet(type: "getAllUsers", identifier: "_id")
+  getOneUser(filter: JSON, sort: JSON): User
+    @isMHAdmin
+    @cacheSet(type: "getUser", identifier: "_id")
+  getAllUserCount(search: String, filter: JSON): Int! @isMHAdmin
+}
+
+extend type Mutation {
+  createUser(data: CreateUserInput!): User!
+    @isMHAdmin
+    @cachePurge(payloads: [{ types: ["getUser", "getAllUsers"] }])
+  updateUser(data: UpdateUserInput!): User!
+    @isMHAdmin
+    @auth
+    @cachePurge(
+      payloads: [
+        { types: ["getUser", "getAllUsers", "getUserById"], identifier: "_id" }
+      ]
+    )
+  deleteUser(_id: ID!): User!
+    @isMHAdmin
+    @auth
+    @cachePurge(
+      payloads: [
+        { types: ["getUser", "getAllUsers", "getUserById"], identifier: "_id" }
+      ]
+    )
+}

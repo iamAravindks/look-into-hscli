@@ -13,3 +13,6 @@ generates:
       scalars:
         DateTime: Date
         EmailAddress: string
+      mappers:
+        User: ../../../modules/user/user.model#IUserDocument
+        Post: ../../../modules/post/post.model#IPostDocument

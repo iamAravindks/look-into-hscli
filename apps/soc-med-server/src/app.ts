@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 require("dotenv").config();
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -78,10 +79,9 @@ import { Modules } from "./modules";
         const isMHAdmin = ServiceVerify(payload.req);
         const sessionId = isMHAdmin
           ? (payload.req?.headers?.["mh-token"] as string)
-          : payload.req?.headers?.authorization?.split(" ")[1] || null;
-
+          : payload.req?.headers?.authorization || null;
         return {
-          accessToken: payload.req?.headers?.authorization?.split(" ")[1],
+          accessToken: payload.req?.headers?.authorization,
           isMHAdmin,
           dataSources: Modules.dataSources,
           cacheContext: {

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { loadFilesSync } from "@graphql-tools/load-files";
 import { mergeResolvers, mergeTypeDefs } from "@graphql-tools/merge";
@@ -8,9 +9,15 @@ import {
   GraphQLJSON,
 } from "graphql-scalars";
 import path from "path";
-import { authDirectiveTransformer } from "../libs/directives/auth.directive";
+import {
+  authDirectiveTransformer,
+  userAuthDirectiveTransformer,
+} from "../libs/directives/auth.directive";
 import { TModule } from "../libs/types";
+import AuthDataSource from "./auth/auth.datasource";
 import HelloDataSource from "./hello/hello.datasource";
+import PostDataSource from "./post/post.datasource";
+import UserDataSource from "./user/user.datasource";
 
 const typeDefs = mergeTypeDefs(
   loadFilesSync(path.resolve(__dirname + "/**/*.graphql"), {
@@ -26,18 +33,23 @@ const resolvers = mergeResolvers(
 export const Modules: TModule = {
   dataSources: {
     helloDataSource: new HelloDataSource(),
+    userDataSource: new UserDataSource(),
+    authDataSource: new AuthDataSource(),
+    postDataSource: new PostDataSource(),
   },
   schemas: cacheDirectiveTransformer(
     authDirectiveTransformer(
-      buildSubgraphSchema({
-        typeDefs: typeDefs,
-        resolvers: {
-          ...resolvers,
-          ...{ JSON: GraphQLJSON },
-          ...{ DateTime: GraphQLDateTime },
-          ...{ EmailAddress: GraphQLEmailAddress },
-        },
-      })
+      userAuthDirectiveTransformer(
+        buildSubgraphSchema({
+          typeDefs: typeDefs,
+          resolvers: {
+            ...resolvers,
+            ...{ JSON: GraphQLJSON },
+            ...{ DateTime: GraphQLDateTime },
+            ...{ EmailAddress: GraphQLEmailAddress },
+          },
+        })
+      )
     )
   ),
 };
