@@ -35,7 +35,6 @@ export const authDirectiveTransformer = (schema: GraphQLSchema) =>
       if (isMHAdminDirective) {
         const { resolve = defaultFieldResolver } = fieldConfig;
         fieldConfig.resolve = function (source, args, context, info) {
-          console.log("mh");
           if (context.isMHAdmin) return resolve(source, args, context, info);
           throw new GraphQLError("invalid service token");
         };
@@ -50,15 +49,11 @@ export const authDirectiveTransformer = (schema: GraphQLSchema) =>
           context: SocMedServerContext,
           info
         ) {
-          console.log("is this auth directive");
-
           if (context.isMHAdmin) return resolve(source, args, context, info);
 
           if (context.accessToken) {
-            console.log(context.accessToken);
             try {
               const user = await getUserFromToken(context.accessToken);
-              console.log(user);
               if (user) {
                 context.userId = user;
                 return resolve(source, args, context, info);
