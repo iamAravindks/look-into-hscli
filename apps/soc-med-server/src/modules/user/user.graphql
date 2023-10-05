@@ -23,7 +23,6 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
-  _id: ID!
   email: String
   name: String
   password: String
@@ -36,6 +35,7 @@ extend type Query {
   getUserById(_id: ID!): User
     @isMHAdmin
     @cacheSet(type: "getUserById", identifier: "_id")
+
   getAllUser(
     search: String
     filter: JSON
@@ -43,22 +43,32 @@ extend type Query {
     limit: Int
     offset: Int
   ): [User]! @isMHAdmin @cacheSet(type: "getAllUsers", identifier: "_id")
+
   getOneUser(filter: JSON, sort: JSON): User
     @isMHAdmin
     @cacheSet(type: "getUser", identifier: "_id")
+
+  getProfile(filter: JSON, sort: JSON): User
+    @isMHAdmin
+    @auth
+    @cacheSet(type: "profile", identifier: "_id")
+
   getAllUserCount(search: String, filter: JSON): Int! @isMHAdmin
 }
 
 extend type Mutation {
   createUser(data: CreateUserInput!): User!
     @isMHAdmin
-    @cachePurge(payloads: [{ types: ["getUser", "getAllUsers"] }])
+    @cachePurge(payloads: [{ types: ["getUser", "getAllUsers", "profile"] }])
   updateUser(data: UpdateUserInput!): User!
     @isMHAdmin
     @auth
     @cachePurge(
       payloads: [
-        { types: ["getUser", "getAllUsers", "getUserById"], identifier: "_id" }
+        {
+          types: ["getUser", "getAllUsers", "getUserById", "profile"]
+          identifier: "_id"
+        }
       ]
     )
   deleteUser(_id: ID!): User!
@@ -66,7 +76,10 @@ extend type Mutation {
     @auth
     @cachePurge(
       payloads: [
-        { types: ["getUser", "getAllUsers", "getUserById"], identifier: "_id" }
+        {
+          types: ["getUser", "getAllUsers", "getUserById", "profile"]
+          identifier: "_id"
+        }
       ]
     )
 }

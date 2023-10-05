@@ -124,6 +124,7 @@ export type Query = {
   getOnePost?: Maybe<FieldWrapper<Post>>;
   getOneUser?: Maybe<FieldWrapper<User>>;
   getPostById?: Maybe<FieldWrapper<Post>>;
+  getProfile?: Maybe<FieldWrapper<User>>;
   getUserById?: Maybe<FieldWrapper<User>>;
   login: FieldWrapper<AuthData>;
   socMedServerHello: FieldWrapper<Scalars['String']['output']>;
@@ -182,6 +183,12 @@ export type QueryGetPostByIdArgs = {
 };
 
 
+export type QueryGetProfileArgs = {
+  filter?: InputMaybe<Scalars['JSON']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+
 export type QueryGetUserByIdArgs = {
   _id: Scalars['ID']['input'];
 };
@@ -201,7 +208,6 @@ export type UpdatePostInput = {
 };
 
 export type UpdateUserInput = {
-  _id: Scalars['ID']['input'];
   bio?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   imageUrl?: InputMaybe<Scalars['String']['input']>;
@@ -427,6 +433,7 @@ export type QueryResolvers<ContextType = SocMedServerContext, ParentType extends
   getOnePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, Partial<QueryGetOnePostArgs>>;
   getOneUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryGetOneUserArgs>>;
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
+  getProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryGetProfileArgs>>;
   getUserById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, '_id'>>;
   login?: Resolver<ResolversTypes['AuthData'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'email' | 'password'>>;
   socMedServerHello?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

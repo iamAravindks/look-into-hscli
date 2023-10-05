@@ -9,10 +9,7 @@ import {
   GraphQLJSON,
 } from "graphql-scalars";
 import path from "path";
-import {
-  authDirectiveTransformer,
-  userAuthDirectiveTransformer,
-} from "../libs/directives/auth.directive";
+import { authDirectiveTransformer } from "../libs/directives/auth.directive";
 import { TModule } from "../libs/types";
 import AuthDataSource from "./auth/auth.datasource";
 import HelloDataSource from "./hello/hello.datasource";
@@ -39,17 +36,15 @@ export const Modules: TModule = {
   },
   schemas: cacheDirectiveTransformer(
     authDirectiveTransformer(
-      userAuthDirectiveTransformer(
-        buildSubgraphSchema({
-          typeDefs: typeDefs,
-          resolvers: {
-            ...resolvers,
-            ...{ JSON: GraphQLJSON },
-            ...{ DateTime: GraphQLDateTime },
-            ...{ EmailAddress: GraphQLEmailAddress },
-          },
-        })
-      )
+      buildSubgraphSchema({
+        typeDefs: typeDefs,
+        resolvers: {
+          ...resolvers,
+          ...{ JSON: GraphQLJSON },
+          ...{ DateTime: GraphQLDateTime },
+          ...{ EmailAddress: GraphQLEmailAddress },
+        },
+      })
     )
   ),
 };

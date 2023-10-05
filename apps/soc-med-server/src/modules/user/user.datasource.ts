@@ -1,16 +1,18 @@
 /* eslint-disable prettier/prettier */
 import { getSearchRegex, parseQuery } from "@hubspire/cache-directive";
 import { GraphQLError } from "graphql";
-import { get, isEmpty, map, omit, set, size } from "lodash";
+import { get, omit, set, size } from "lodash";
 import { PipelineStage } from "mongoose";
 import {
   CreateUserInput,
-  MutationDeleteManyUserArgs,
   QueryGetAllUserArgs,
   QueryGetAllUserCountArgs,
   QueryGetOneUserArgs,
+  QueryGetProfileArgs,
+  SocMedServerContext,
   UpdateUserInput,
 } from "../../libs/types";
+import { GQLError } from "../../utils/GQLError";
 import { UserModel } from "./user.model";
 
 export default class UserDataSource {
@@ -77,28 +79,22 @@ export default class UserDataSource {
     return this.model.findOne(args.filter).sort(args.sort).lean();
   }
 
+  async getProfile(args: QueryGetProfileArgs, context: SocMedServerContext) {
+    return this.model.findById(context.userId).lean();
+  }
+
   async createUser(data: CreateUserInput) {
     const user = new this.model({ ...data });
     return user.save();
   }
 
-  async createManyUser(datas: CreateUserInput[]) {
-    const users = datas.map((input: CreateUserInput) => this.createUser(input));
-    return users;
-  }
-
-  async updateUser(data: UpdateUserInput) {
-    const user = await this.model.findById(data._id);
-    if (!user) throw new GraphQLError("user not found");
+  async updateUser(data: UpdateUserInput, context: SocMedServerContext) {
+    const user = await this.model.findById(context.userId);
+    if (!user) throw new GQLError("user not found", "NOT_FOUND", 404);
 
     for (const field in omit(data, "_id")) set(user, field, get(data, field));
 
     return user.save();
-  }
-
-  async updateManyUser(datas: UpdateUserInput[]) {
-    const users = datas.map((input: UpdateUserInput) => this.updateUser(input));
-    return users;
   }
 
   async deleteUser(_id: string) {
@@ -107,13 +103,5 @@ export default class UserDataSource {
 
     await this.model.deleteOne({ _id });
     return user;
-  }
-
-  async deleteManyUser(args: MutationDeleteManyUserArgs) {
-    const users = await this.model.find(args.filter);
-    if (isEmpty(users)) throw new GraphQLError("users not found");
-
-    await this.model.deleteMany({ _id: { $in: map(users, "_id") } });
-    return users;
   }
 }

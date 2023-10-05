@@ -12,6 +12,10 @@ export default {
     },
     getOneUser: (parent, args, context, info) =>
       context.dataSources.userDataSource.getOneUser(args),
+    getProfile: (parent, args, context, info) => {
+      console.log("hai");
+      return context.dataSources.userDataSource.getProfile(args, context);
+    },
     getAllUserCount: (parent, args, context, info) =>
       context.dataSources.userDataSource.getAllUserCount(args),
   },
@@ -19,7 +23,7 @@ export default {
     createUser: (parent, args, context, info) =>
       context.dataSources.userDataSource.createUser(args.data),
     updateUser: (parent, args, context, info) =>
-      context.dataSources.userDataSource.updateUser(args.data),
+      context.dataSources.userDataSource.updateUser(args.data, context),
     deleteUser: (parent, args, context, info) =>
       context.dataSources.userDataSource.deleteUser(String(args._id)),
   },
