@@ -13,6 +13,7 @@ import { authDirectiveTransformer } from "../libs/directives/auth.directive";
 import { TModule } from "../libs/types";
 import AuthDataSource from "./auth/auth.datasource";
 import HelloDataSource from "./hello/hello.datasource";
+import LikeDataSource from "./like/like.datasource";
 import PostDataSource from "./post/post.datasource";
 import UserDataSource from "./user/user.datasource";
 
@@ -33,6 +34,7 @@ export const Modules: TModule = {
     userDataSource: new UserDataSource(),
     authDataSource: new AuthDataSource(),
     postDataSource: new PostDataSource(),
+    likeDataSource: new LikeDataSource(),
   },
   schemas: cacheDirectiveTransformer(
     authDirectiveTransformer(

@@ -1,0 +1,49 @@
+type Like @key(fields: "_id") {
+  _id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  userId: ID
+  postId: ID
+}
+
+input CreateLikeInput {
+  userId: ID!
+  postId: ID!
+}
+
+input UpdateLikeInput {
+  _id: ID!
+  userId: ID
+  postId: ID
+}
+
+extend type Query {
+  getLikeById(_id: ID!): Like
+    @isMHAdmin
+    @cacheSet(type: "getLikeById", identifier: "_id")
+  getAllLike(
+    search: String
+    filter: JSON
+    sort: JSON
+    limit: Int
+    offset: Int
+  ): [Like]! @auth @cacheSet(type: "getAllLikes", identifier: "_id")
+  getOneLike(filter: JSON, sort: JSON): Like
+    @isMHAdmin
+    @cacheSet(type: "getLike", identifier: "_id")
+  getAllLikeCount(search: String, filter: JSON): Int!
+}
+
+extend type Mutation {
+  createLike(postId: ID): Like!
+    @auth
+    @cachePurge(payloads: [{ types: ["getLike", "getAllLikes"] }])
+
+  deleteLike(postId: ID): Like!
+    @auth
+    @cachePurge(
+      payloads: [
+        { types: ["getLike", "getAllLikes", "getLikeById"], identifier: "_id" }
+      ]
+    )
+}

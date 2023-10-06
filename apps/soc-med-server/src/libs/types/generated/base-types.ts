@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { IUserDocument } from '../../../modules/user/user.model';
 import { IPostDocument } from '../../../modules/post/post.model';
+import { ILikeDocument } from '../../../modules/like/like.model';
 import { SocMedServerContext } from '../index';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -36,6 +37,11 @@ export type CachePurgeInput = {
   types: Array<Scalars['String']['input']>;
 };
 
+export type CreateLikeInput = {
+  postId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type CreatePostInput = {
   content: Scalars['String']['input'];
   imageUrl?: InputMaybe<Scalars['String']['input']>;
@@ -50,16 +56,32 @@ export type CreateUserInput = {
   password: Scalars['String']['input'];
 };
 
+export type Like = {
+  __typename?: 'Like';
+  _id: FieldWrapper<Scalars['ID']['output']>;
+  createdAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  postId?: Maybe<FieldWrapper<Scalars['ID']['output']>>;
+  updatedAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  userId?: Maybe<FieldWrapper<Scalars['ID']['output']>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createLike: FieldWrapper<Like>;
   createPost: FieldWrapper<Post>;
   createUser: FieldWrapper<User>;
+  deleteLike: FieldWrapper<Like>;
   deleteManyPost: Array<FieldWrapper<Post>>;
   deletePost: FieldWrapper<Post>;
   deleteUser: FieldWrapper<User>;
   resetPassword: FieldWrapper<User>;
   updatePost: FieldWrapper<Post>;
   updateUser: FieldWrapper<User>;
+};
+
+
+export type MutationCreateLikeArgs = {
+  postId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -70,6 +92,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+
+export type MutationDeleteLikeArgs = {
+  postId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -117,10 +144,14 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   forgotPassword: FieldWrapper<Scalars['String']['output']>;
+  getAllLike: Array<Maybe<FieldWrapper<Like>>>;
+  getAllLikeCount: FieldWrapper<Scalars['Int']['output']>;
   getAllPost: Array<Maybe<FieldWrapper<Post>>>;
   getAllPostCount: FieldWrapper<Scalars['Int']['output']>;
   getAllUser: Array<Maybe<FieldWrapper<User>>>;
   getAllUserCount: FieldWrapper<Scalars['Int']['output']>;
+  getLikeById?: Maybe<FieldWrapper<Like>>;
+  getOneLike?: Maybe<FieldWrapper<Like>>;
   getOnePost?: Maybe<FieldWrapper<Post>>;
   getOneUser?: Maybe<FieldWrapper<User>>;
   getPostById?: Maybe<FieldWrapper<Post>>;
@@ -133,6 +164,21 @@ export type Query = {
 
 export type QueryForgotPasswordArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllLikeArgs = {
+  filter?: InputMaybe<Scalars['JSON']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+
+export type QueryGetAllLikeCountArgs = {
+  filter?: InputMaybe<Scalars['JSON']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -163,6 +209,17 @@ export type QueryGetAllUserArgs = {
 export type QueryGetAllUserCountArgs = {
   filter?: InputMaybe<Scalars['JSON']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetLikeByIdArgs = {
+  _id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetOneLikeArgs = {
+  filter?: InputMaybe<Scalars['JSON']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 
@@ -197,6 +254,12 @@ export type QueryGetUserByIdArgs = {
 export type QueryLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type UpdateLikeInput = {
+  _id: Scalars['ID']['input'];
+  postId?: InputMaybe<Scalars['ID']['input']>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type UpdatePostInput = {
@@ -332,16 +395,19 @@ export type ResolversTypes = ResolversObject<{
   AuthData: ResolverTypeWrapper<AuthData>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   CachePurgeInput: CachePurgeInput;
+  CreateLikeInput: CreateLikeInput;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   CreatePostInput: CreatePostInput;
   CreateUserInput: CreateUserInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  Like: ResolverTypeWrapper<ILikeDocument>;
   Mutation: ResolverTypeWrapper<{}>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Post: ResolverTypeWrapper<IPostDocument>;
   Query: ResolverTypeWrapper<{}>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  UpdateLikeInput: UpdateLikeInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<IUserDocument>;
@@ -353,16 +419,19 @@ export type ResolversParentTypes = ResolversObject<{
   AuthData: AuthData;
   String: Scalars['String']['output'];
   CachePurgeInput: CachePurgeInput;
+  CreateLikeInput: CreateLikeInput;
+  ID: Scalars['ID']['output'];
   CreatePostInput: CreatePostInput;
   CreateUserInput: CreateUserInput;
   DateTime: Scalars['DateTime']['output'];
   EmailAddress: Scalars['EmailAddress']['output'];
   JSON: Scalars['JSON']['output'];
+  Like: ILikeDocument;
   Mutation: {};
-  ID: Scalars['ID']['output'];
   Post: IPostDocument;
   Query: {};
   Int: Scalars['Int']['output'];
+  UpdateLikeInput: UpdateLikeInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   User: IUserDocument;
@@ -410,9 +479,21 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
+export type LikeResolvers<ContextType = SocMedServerContext, ParentType extends ResolversParentTypes['Like'] = ResolversParentTypes['Like']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Like']>, { __typename: 'Like' } & GraphQLRecursivePick<UnwrappedObject<ParentType>, {"_id":true}>, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = SocMedServerContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, Partial<MutationCreateLikeArgs>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'data'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'data'>>;
+  deleteLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, Partial<MutationDeleteLikeArgs>>;
   deleteManyPost?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationDeleteManyPostArgs, 'filter'>>;
   deletePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationDeletePostArgs, '_id'>>;
   deleteUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, '_id'>>;
@@ -435,10 +516,14 @@ export type PostResolvers<ContextType = SocMedServerContext, ParentType extends 
 
 export type QueryResolvers<ContextType = SocMedServerContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   forgotPassword?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryForgotPasswordArgs, 'email'>>;
+  getAllLike?: Resolver<Array<Maybe<ResolversTypes['Like']>>, ParentType, ContextType, Partial<QueryGetAllLikeArgs>>;
+  getAllLikeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<QueryGetAllLikeCountArgs>>;
   getAllPost?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType, Partial<QueryGetAllPostArgs>>;
   getAllPostCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<QueryGetAllPostCountArgs>>;
   getAllUser?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUserArgs>>;
   getAllUserCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<QueryGetAllUserCountArgs>>;
+  getLikeById?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QueryGetLikeByIdArgs, '_id'>>;
+  getOneLike?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, Partial<QueryGetOneLikeArgs>>;
   getOnePost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, Partial<QueryGetOnePostArgs>>;
   getOneUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryGetOneUserArgs>>;
   getPostById?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, '_id'>>;
@@ -471,6 +556,7 @@ export type Resolvers<ContextType = SocMedServerContext> = ResolversObject<{
   DateTime?: GraphQLScalarType;
   EmailAddress?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
+  Like?: LikeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

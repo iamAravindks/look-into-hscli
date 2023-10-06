@@ -16,3 +16,4 @@ generates:
       mappers:
         User: ../../../modules/user/user.model#IUserDocument
         Post: ../../../modules/post/post.model#IPostDocument
+        Like: ../../../modules/like/like.model#ILikeDocument
