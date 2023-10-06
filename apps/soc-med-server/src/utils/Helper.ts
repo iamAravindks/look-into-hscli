@@ -25,3 +25,15 @@ export const getUserFromToken = async (token: string) => {
     throw new GQLError("verification failed", "VERIFICATION_FAILED", 400);
   }
 };
+
+export function convertDateStringsToDates(obj: any) {
+  for (const key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      convertDateStringsToDates(obj[key]);
+    } else if (typeof obj[key] === "string") {
+      obj[key] = new Date(obj[key]);
+    }
+  }
+
+  return obj;
+}

@@ -23,43 +23,38 @@ input UpdatePostInput {
 }
 
 extend type Query {
-  getPostById(_id: ID!): Post
-    @isMHAdmin
-    @cacheSet(type: "getPostById", identifier: "_id")
+  getPostById(_id: ID!): Post @cacheSet(type: "getPostById", identifier: "_id")
   getAllPost(
     search: String
     filter: JSON
     sort: JSON
     limit: Int
     offset: Int
-  ): [Post]! @isMHAdmin @cacheSet(type: "getAllPosts", identifier: "_id")
+  ): [Post]! @cacheSet(type: "getAllPosts", identifier: "_id")
+
   getOnePost(filter: JSON, sort: JSON): Post
-    @isMHAdmin
     @cacheSet(type: "getPost", identifier: "_id")
-  getAllPostCount(search: String, filter: JSON): Int! @isMHAdmin
+
+  getAllPostCount(search: String, filter: JSON): Int!
 }
 
 extend type Mutation {
   createPost(data: CreatePostInput!): Post!
-    @isMHAdmin
     @auth
     @cachePurge(payloads: [{ types: ["getPost", "getAllPosts"] }])
   updatePost(data: UpdatePostInput!): Post!
-    @isMHAdmin
     @cachePurge(
       payloads: [
         { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }
       ]
     )
   deletePost(_id: ID!): Post!
-    @isMHAdmin
     @cachePurge(
       payloads: [
         { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }
       ]
     )
   deleteManyPost(filter: JSON!): [Post!]!
-    @isMHAdmin
     @cachePurge(
       payloads: [
         { types: ["getPost", "getAllPosts", "getPostById"], identifier: "_id" }

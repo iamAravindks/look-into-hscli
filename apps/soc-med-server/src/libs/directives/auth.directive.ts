@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { getDirective, MapperKind, mapSchema } from "@graphql-tools/utils";
 import { defaultFieldResolver, GraphQLError, GraphQLSchema } from "graphql";
-import { getUserFromToken } from "../../utils/AuthHelper";
+import { getUserFromToken } from "../../utils/Helper";
 import { SocMedServerContext } from "../types";
 
 const isMHAdminDirectiveArgumentMaps: Record<string, any> = {};

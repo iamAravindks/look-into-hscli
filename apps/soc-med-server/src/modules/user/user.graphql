@@ -4,12 +4,18 @@ type User @key(fields: "_id") {
   updatedAt: DateTime
   email: String
   name: String
-  password: String
   bio: String
   status: String
   imageUrl: String
   followers: [ID]
   following: [ID]
+  posts(
+    search: String
+    filter: JSON
+    sort: JSON
+    limit: Int
+    offset: Int
+  ): [Post]
   passwordResetToken: String
   passwordTokenExpires: DateTime
 }

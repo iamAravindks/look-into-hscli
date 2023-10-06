@@ -30,5 +30,9 @@ export default {
   User: {
     __resolveReference: async (ref, context, info) =>
       ref._id ? context.loaders.userByIdLoader.load(ref._id) : null,
+    posts: async (parent, args, context, info) => {
+      args.filter = { ...args.filter, creator: parent._id };
+      return context.dataSources.postDataSource.getAllPost(args);
+    },
   },
 } as Resolvers;

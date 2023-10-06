@@ -226,11 +226,20 @@ export type User = {
   following?: Maybe<Array<Maybe<FieldWrapper<Scalars['ID']['output']>>>>;
   imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   name?: Maybe<FieldWrapper<Scalars['String']['output']>>;
-  password?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   passwordResetToken?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   passwordTokenExpires?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  posts?: Maybe<Array<Maybe<FieldWrapper<Post>>>>;
   status?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   updatedAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+};
+
+
+export type UserPostsArgs = {
+  filter?: InputMaybe<Scalars['JSON']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -449,9 +458,9 @@ export type UserResolvers<ContextType = SocMedServerContext, ParentType extends 
   following?: Resolver<Maybe<Array<Maybe<ResolversTypes['ID']>>>, ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   passwordResetToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   passwordTokenExpires?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, Partial<UserPostsArgs>>;
   status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

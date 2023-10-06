@@ -12,22 +12,28 @@ import {
   SocMedServerContext,
   UpdatePostInput,
 } from "../../libs/types";
+import { convertDateStringsToDates } from "../../utils/Helper";
 import { PostModel } from "./post.model";
 
 export default class PostDataSource {
   private readonly model = PostModel;
+  private readonly POST_SEARCH = "post_search";
 
   async getAllPost(args: QueryGetAllPostArgs) {
     const pipelines: PipelineStage[] = [];
     const limit = Number(args.limit) || 10;
     const offset = Number(args.offset) || 0;
 
+    convertDateStringsToDates(args.filter);
+
+    console.log(args.filter);
+
     if (size(args.search?.trim()) > 2) {
       pipelines.push({
         $search: {
-          index: "search-index-name",
+          index: this.POST_SEARCH,
           regex: {
-            path: ["field-name"],
+            path: ["title"],
             query: getSearchRegex(args.search?.trim() || ""),
             allowAnalyzedField: true,
           },
