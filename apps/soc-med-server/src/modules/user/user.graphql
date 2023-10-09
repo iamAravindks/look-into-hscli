@@ -46,7 +46,7 @@ extend type Query {
     sort: JSON
     limit: Int
     offset: Int
-  ): [User]! @isMHAdmin @cacheSet(type: "getAllUsers", identifier: "_id")
+  ): [User]! @cacheSet(type: "getAllUsers", identifier: "_id")
 
   getOneUser(filter: JSON, sort: JSON): User
     @cacheSet(type: "getUser", identifier: "_id")

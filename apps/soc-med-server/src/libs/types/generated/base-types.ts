@@ -60,8 +60,10 @@ export type Like = {
   __typename?: 'Like';
   _id: FieldWrapper<Scalars['ID']['output']>;
   createdAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  post: FieldWrapper<Post>;
   postId?: Maybe<FieldWrapper<Scalars['ID']['output']>>;
   updatedAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
+  user: FieldWrapper<User>;
   userId?: Maybe<FieldWrapper<Scalars['ID']['output']>>;
 };
 
@@ -137,6 +139,7 @@ export type Post = {
   createdAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
   creator?: Maybe<FieldWrapper<Scalars['ID']['output']>>;
   imageUrl?: Maybe<FieldWrapper<Scalars['String']['output']>>;
+  likes?: Maybe<Array<Maybe<FieldWrapper<Like>>>>;
   title?: Maybe<FieldWrapper<Scalars['String']['output']>>;
   updatedAt?: Maybe<FieldWrapper<Scalars['DateTime']['output']>>;
 };
@@ -483,8 +486,10 @@ export type LikeResolvers<ContextType = SocMedServerContext, ParentType extends 
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Like']>, { __typename: 'Like' } & GraphQLRecursivePick<UnwrappedObject<ParentType>, {"_id":true}>, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
   postId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -509,6 +514,7 @@ export type PostResolvers<ContextType = SocMedServerContext, ParentType extends 
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   creator?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Like']>>>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

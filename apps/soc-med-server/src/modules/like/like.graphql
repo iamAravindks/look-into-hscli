@@ -4,6 +4,8 @@ type Like @key(fields: "_id") {
   updatedAt: DateTime
   userId: ID
   postId: ID
+  user: User!
+  post: Post!
 }
 
 input CreateLikeInput {

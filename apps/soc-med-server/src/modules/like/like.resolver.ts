@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { CreateLikeInput, Resolvers } from "../../libs/types";
 
 export default {
@@ -26,5 +27,11 @@ export default {
   Like: {
     __resolveReference: async (ref, context, info) =>
       ref._id ? context.loaders.likeByIdLoader.load(ref._id) : null,
+    user: (parent, args, context, info) => {
+      return context.loaders.userByIdLoader.load(parent.userId.toString());
+    },
+    post: (parent, args, context, info) => {
+      return context.loaders.postByIdLoader.load(parent.postId.toString());
+    },
   },
 } as Resolvers;

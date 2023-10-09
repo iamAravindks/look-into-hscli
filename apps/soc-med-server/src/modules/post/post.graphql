@@ -6,6 +6,7 @@ type Post @key(fields: "_id") {
   content: String
   imageUrl: String
   creator: ID
+  likes: [Like]
 }
 
 input CreatePostInput {

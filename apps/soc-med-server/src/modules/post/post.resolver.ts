@@ -26,5 +26,9 @@ export default {
   Post: {
     __resolveReference: async (ref, context, info) =>
       ref._id ? context.loaders.postByIdLoader.load(ref._id) : null,
+
+    likes: async (parent, args, context: any, info) => {
+      return context.loaders.likeByPostLoader.load(parent._id);
+    },
   },
 } as Resolvers;
